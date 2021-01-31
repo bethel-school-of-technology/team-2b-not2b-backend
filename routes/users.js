@@ -6,8 +6,8 @@ var User = require('../models/user');
 var tokenService = require('../services/auth');
 var passwordService = require('../services/password');
 
-// route for user registration (add User) - /register
-router.post('/register', async (req,res, next) => {
+// route for user signup (add User) - /signup
+router.post('/signup', async (req,res, next) => {
   try{
     // console.log(req.body);
     let newUser = new User({

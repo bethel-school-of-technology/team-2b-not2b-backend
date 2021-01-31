@@ -1,6 +1,7 @@
 // firstName, lastName, email, username, password
 
 var mongoose = require('mongoose');
+var uniqueValidator = require("mongoose-unique-validator");
 
 var userSchema = new mongoose.Schema({
     firstName: {
@@ -26,6 +27,8 @@ var userSchema = new mongoose.Schema({
         required: true
     }
 });
+
+userSchema.plugin(uniqueValidator);
 
 var User = mongoose.model('user', userSchema);
 
