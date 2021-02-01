@@ -6,8 +6,8 @@ var User = require('../models/user');
 var tokenService = require('../services/auth');
 var passwordService = require('../services/password');
 
-// route for user signup (add User) - /signup
-router.post('/signup', async (req,res, next) => {
+// route for user signup-page (add User) - /signup-page
+router.post('/signup-page', async (req,res, next) => {
   try{
     // console.log(req.body);
     let newUser = new User({
@@ -23,59 +23,64 @@ router.post('/signup', async (req,res, next) => {
     res.json({
       message: 'This is a true shinobi',
       status: 200,
-    })
+    });
+
   }
   catch(err){
     console.log(err);
     res.json({
-      message: 'True Shinobis would know their passwords',
+      message: 'This Shinobi already exists',
       status: 403,
     })
   }
 })
 
 //route for login => /login
-router.post('/login', async (req,res, next) => {
+router.post('/login-page', async (req,res, next) => {
   // console.log(req.body);
 
-  // Using the username to check DB to see if it exists
-  User.findOne({username: req.body.username}, function(err, user){
+  // Using the EMAIL to check DB to see if it exists
+  User.findOne({email: req.body.email}, function(err, user){
+    // console.log(req.body);
     if(err){
       console.log(err);
       res.json({
         message: 'Something far deeper is wrong here sensei',
         status: 500,
-      })
+      });
     }
-    console.log(user);
+    
     if(user){
       let passwordMatch = passwordService.comparePasswords(req.body.password, user.password);
+      // console.log(passwordMatch);
       if(passwordMatch){
         // Creating the token
         let token = tokenService.assignToken(user);
+        // console.log(token);
         res.json({
           message: 'You are a true shinobi, you may continue your journey',
           status: 200,
-          token
-        })
+          token: token
+        });
       }
       else{
         console.log('Wrong Password');
         res.json({
           message: 'True Shinobis would know their passwords',
           status: 403,
-        })
+        });
       }
     }
     else{
       res.json({
         message: 'Reveal your true identity',
         status: 403,
-      })
+      });
     }
-  })
+
+  });
   
-})
+});
 
 // route to get profile info => /profile
 router.get('/profile', async (req,res, next) => {

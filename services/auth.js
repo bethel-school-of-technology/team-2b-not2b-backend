@@ -10,7 +10,7 @@ var tokenService = {
     assignToken: function (user) {
         const token = jwt.sign(
             {
-                username: user.username,
+                email: user.email,
                 _id: user._id
             },
             'shinobiSecrets',
