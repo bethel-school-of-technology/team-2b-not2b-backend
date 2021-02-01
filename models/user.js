@@ -1,7 +1,7 @@
 // firstName, lastName, email, username, password
 
 var mongoose = require('mongoose');
-var uniqueValidator = require("mongoose-unique-validator");
+var uniqueValidator = require("mongoose-unique-validator"); // Plugin to help apply an extra hook that check data before saving to DB
 
 var userSchema = new mongoose.Schema({
     firstName: {
