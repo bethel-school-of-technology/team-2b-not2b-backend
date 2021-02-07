@@ -9,14 +9,9 @@ var tokenService = {
     // Creating a token when given user information
     assignToken: function (user) {
         const token = jwt.sign(
-            {
-                email: user.email,
-                _id: user._id
-            },
+            { email: user.email, _id: user._id},
             'shinobiSecrets',
-            {
-                expiresIn: '6h'
-            }
+            { expiresIn: '6h' }
         )
         return token;
     },
