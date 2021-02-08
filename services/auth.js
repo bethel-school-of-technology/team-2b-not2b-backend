@@ -12,7 +12,7 @@ var tokenService = {
             { email: user.email, _id: user._id},
             'shinobiSecrets',
             { expiresIn: '6h' }
-        )
+        );
         return token;
     },
     // Inspecting a token as input

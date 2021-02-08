@@ -5,12 +5,12 @@ var User = require('../models/user');
 
 var tokenService = require('../services/auth');
 var passwordService = require('../services/password');
-var checkAuth = require("../public/middleware/check-auth");
+// var checkAuth = require("../public/middleware/check-auth");
 
 // route for user signup-page (add User) - /signup-page
 router.post('/signup-page', async (req, res, next) => {
   try {
-    // console.log(req.body);
+    console.log(req.body);
     let newUser = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -20,36 +20,36 @@ router.post('/signup-page', async (req, res, next) => {
     });
     console.log(newUser);
     let result = await newUser.save();
-    console.log(result);
-    res.status(200).json({
-      message: 'This is a true shinobi',
-      id: newUser._id
+    let token = tokenService.assignToken(newUser);
+    // console.log(result);
+    res.json({
+      message: 'Your shinobi journey begins today',
+      status: 200,
+      token: token
     });
 
   }
   catch (err) {
     console.log(err);
-    res.status(403).json({
+    res.json({
       message: 'This Shinobi already exists',
+      status: 403
     });
   }
 });
 
-// router.post('/decision/:userId.:path', async (req, res, next) => {
-//   console.log(req.params);
-//   res.send();
-// })
 
 //route for login => /login
 router.post('/login-page', async (req, res, next) => {
   // console.log(req.body);
   // Using the EMAIL to check DB to see if it exists
-  User.findOne({ email: req.body.email }, function (err, user) {
+  User.findOne({ username: req.body.username }, function (err, user) {
     // console.log(req.body);
     if (err) {
       console.log(err);
-      res.status(500).json({
-        message: 'Something far deeper is wrong here sensei'
+      res.json({
+        message: 'Something far deeper is wrong here sensei',
+        status: 500
       });
     }
     if (user) {
@@ -59,21 +59,24 @@ router.post('/login-page', async (req, res, next) => {
         // Creating the token if the password matches
         let token = tokenService.assignToken(user);
         // console.log(token);
-        res.status(200).json({
+        res.json({
           message: 'You are a true shinobi, you may continue your journey',
+          status: 200,
           token: token
         });
       }
       else {
         console.log('Wrong Password');
-        res.status(403).json({
+        res.json({
           message: 'True Shinobis would know their passwords',
+          status: 403
         });
       }
     }
     else {
-      res.status(403).json({
-        message: 'Reveal your true identity'
+      res.json({
+        message: 'Reveal your true identity',
+        status: 403
       });
     }
 
@@ -82,41 +85,6 @@ router.post('/login-page', async (req, res, next) => {
 });
 
 // route to get profile info => /profile
-router.get('/profile', async (req, res, next) => {
-  console.log(req.headers);
-  let userToken = req.headers.auth;
-  // console.log(userToken);
-  if (userToken) {
-    let currentUser = await tokenService.verifyToken(userToken);
-    console.log(currentUser);
-
-    if (currentUser) {
-      let responseUser = {
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        email: currentUser.email,
-        username: currentUser.username
-      };
-      res.status(200).json({
-        message: 'User Profile info loaded successfully',
-        user: responseUser
-      });
-    }
-    else {
-      res.status(403).json({
-        message: 'Token was invalid or expired'
-      });
-    }
-  }
-  else {
-    res.status(403).json({
-      message: 'No token received'
-    });
-  }
-});
-
-
-
 router.get('/decision-page', async (req, res, next) => {
   console.log(req.headers);
   let userToken = req.headers.auth;
@@ -133,22 +101,67 @@ router.get('/decision-page', async (req, res, next) => {
         email: currentUser.email,
         username: currentUser.username
       };
-      res.status(200).json({
+      res.json({
         message: 'User Profile info loaded successfully',
+        status: 200,
         user: responseUser
       });
     }
     else {
-      res.status(403).json({
-        message: 'Token was invalid or expired'
+      res.json({
+        message: 'Token was invalid or expired',
+        status: 403
       });
     }
   }
   else {
-    res.status(403).json({
-      message: 'No token received'
+    res.json({
+      message: 'No token received',
+      status: 403
     });
   }
 });
+
+
+
+
+router.get('/dashboard', async (req, res, next) => {
+  console.log(req.headers);
+  let userToken = req.headers.authorization;
+  // console.log(userToken);
+  if (userToken) {
+    let currentUser = await tokenService.verifyToken(userToken);
+    console.log(currentUser);
+
+    if (currentUser) {
+      let responseUser = {
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        email: currentUser.email,
+        username: currentUser.username
+      };
+      res.json({
+        message: 'User Profile info loaded successfully',
+        status: 200,
+        user: responseUser
+      });
+    }
+    else {
+      res.json({
+        message: 'Token was invalid or expired',
+        status: 403
+      });
+    }
+  }
+  else {
+    res.json({
+      message: 'No token received',
+      status: 403
+    });
+  }
+});
+
+
+
 
 module.exports = router;
