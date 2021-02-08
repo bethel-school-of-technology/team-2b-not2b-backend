@@ -9,8 +9,8 @@ var passwordService = {
         return hash;
     },
     comparePasswords: function(plainTextPassword, hashedPassword){
-        return bcrypt.compareSync(plainTextPassword, hashedPassword)
+        return bcrypt.compareSync(plainTextPassword, hashedPassword);
     }
-}
+};
 
 module.exports = passwordService;
