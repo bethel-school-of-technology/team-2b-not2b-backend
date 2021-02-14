@@ -25,6 +25,14 @@ var userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    pathChoice: {
+        type: Number,
+        required: true
+    },
+    progress: {
+        type: Number,
+        required: true,
     }
 });
 

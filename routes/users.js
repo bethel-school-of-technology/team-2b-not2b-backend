@@ -16,16 +16,18 @@ router.post('/signup-page', async (req, res, next) => {
       lastName: req.body.lastName,
       email: req.body.email,
       username: req.body.username,
-      password: passwordService.hashPassword(req.body.password)
+      password: passwordService.hashPassword(req.body.password),
+      pathChoice: req.body.pathChoice,
+      progress: 0
     });
     console.log(newUser);
     let result = await newUser.save();
-    let token = tokenService.assignToken(newUser);
+    // let token = tokenService.assignToken(newUser);
     // console.log(result);
     res.json({
       message: 'Your shinobi journey begins today',
       status: 200,
-      token: token
+      // token: token
     });
 
   }
@@ -138,7 +140,8 @@ router.get('/dashboard', async (req, res, next) => {
         firstName: currentUser.firstName,
         lastName: currentUser.lastName,
         email: currentUser.email,
-        username: currentUser.username
+        username: currentUser.username,
+        pathChoice: currentUser.pathChoice
       };
       res.json({
         message: 'User Profile info loaded successfully',
