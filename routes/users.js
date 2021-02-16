@@ -10,7 +10,7 @@ var passwordService = require('../services/password');
 // route for user signup-page (add User) - /signup-page
 router.post('/signup-page', async (req, res, next) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     let newUser = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -88,13 +88,13 @@ router.post('/login-page', async (req, res, next) => {
 
 // route to get profile info => /profile
 router.get('/decision-page', async (req, res, next) => {
-  console.log(req.headers);
+  // console.log(req.headers);
   let userToken = req.headers.auth;
-  console.log(userToken);
+  // console.log(userToken);
 
   if (userToken) {
     let currentUser = await tokenService.verifyToken(userToken);
-    console.log(currentUser);
+    // console.log(currentUser);
 
     if (currentUser) {
       let responseUser = {
@@ -128,12 +128,12 @@ router.get('/decision-page', async (req, res, next) => {
 
 
 router.get('/dashboard', async (req, res, next) => {
-  console.log(req.headers);
+  // console.log(req.headers);
   let userToken = req.headers.authorization;
   // console.log(userToken);
   if (userToken) {
     let currentUser = await tokenService.verifyToken(userToken);
-    console.log(currentUser);
+    // console.log(currentUser);
 
     if (currentUser) {
       let responseUser = {
